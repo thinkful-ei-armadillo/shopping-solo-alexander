@@ -6,10 +6,9 @@ const STORE = [
 ];
 
 //Functions to handle rendering the shopping-list:
-
 function generateListItemString(item, index) {
     return `
-        <li item-index="${index}">
+        <li data-item-index="${index}">
             <span class="shopping-item ${item.checked ? 'shopping-item__checked' : '' }">${item.name}</span>
             <div class="shopping-item-controls">
                 <button class="shopping-item-toggle">
@@ -27,22 +26,18 @@ function generateFullShoppingListString(shoppingList) {
 }
 
 function renderShoppingList(store = STORE) {
-    //renders the shopping-list
     const fullItemListString = generateFullShoppingListString(store);
     $('.js-shopping-list').html(fullItemListString);
 }
 
 //Functions to handle adding a new list item:
 function handleAddingNewItem() {
-    //add item to the STORE or other list/array...
-    //  needs to grab the input value from the form
-    //  feed that to a function that add it into the list
-    //rerender the shopping list on the DOM
     $('#js-shopping-list-form').submit(event => {
         event.preventDefault();
         const itemName = $('.js-shopping-list-entry').val();
         event.currentTarget.reset();
         addItemToShoppingList(itemName);
+        renderShoppingList();
     });
 }
 
@@ -50,25 +45,35 @@ function addItemToShoppingList(itemName) {
     STORE.push({name: itemName, checked: false});
 }
 
+//Function to grab the item index:
+function grabItemIndex(target) {
+    return $(target).closest('li').data('itemIndex');
+}
+
 //Functions to handle checking an item on the list:
 function handleCheckingListItem() {
-    //adds the 'checked' class to the text
-    //grab the index of the item we clicked
-    //toggle the 'checked' variable in the shopping-list
-    //rerender the shopping-list on the DOM
-    $('.shopping-list').on('click', '.shopping-item-toggle', event => {
-      const itemIndex = $(event.currentTarget).closest('li').attr('item-index');
-      STORE[itemIndex].checked = !STORE[itemIndex].checked;
-      renderShoppingList();
+    $('.shopping-list').on('click', '.shopping-item-toggle', function() {
+        const itemIndex = grabItemIndex(this);
+        toggleListItemCheck(itemIndex);
+        renderShoppingList();
     });
+}
+
+function toggleListItemCheck(itemIndex) {
+    STORE[itemIndex].checked = !STORE[itemIndex].checked;
 }
 
 //Functions to handle deleting an item on the list:
 function handleDeletingListItem() {
-    //deletes the list them from the store
-    //grab the index of the item we clicked
-    //splice that index from the store
-    //rerender the shopping-list on the DOM
+    $('.shopping-list').on('click', '.shopping-item-delete', function() {
+        const itemIndex = grabItemIndex(this);
+        deleteListItem(itemIndex);
+        renderShoppingList();
+    });
+}
+
+function deleteListItem(itemIndex) {
+    STORE.splice(itemIndex,1);
 }
 
 //Main Function:
@@ -77,7 +82,6 @@ function main() {
     handleAddingNewItem();
     handleCheckingListItem();
     handleDeletingListItem();
-    
 }
 
 $(main);
