@@ -38,6 +38,16 @@ function handleAddingNewItem() {
     //  needs to grab the input value from the form
     //  feed that to a function that add it into the list
     //rerender the shopping list on the DOM
+    $('#js-shopping-list-form').submit(event => {
+        event.preventDefault();
+        const itemName = $('.js-shopping-list-entry').val();
+        event.currentTarget.reset();
+        addItemToShoppingList(itemName);
+    });
+}
+
+function addItemToShoppingList(itemName) {
+    STORE.push({name: itemName, checked: false});
 }
 
 //Functions to handle checking an item on the list:
@@ -46,6 +56,11 @@ function handleCheckingListItem() {
     //grab the index of the item we clicked
     //toggle the 'checked' variable in the shopping-list
     //rerender the shopping-list on the DOM
+    $('.shopping-list').on('click', '.shopping-item-toggle', event => {
+      const itemIndex = $(event.currentTarget).closest('li').attr('item-index');
+      STORE[itemIndex].checked = !STORE[itemIndex].checked;
+      renderShoppingList();
+    });
 }
 
 //Functions to handle deleting an item on the list:
@@ -62,6 +77,7 @@ function main() {
     handleAddingNewItem();
     handleCheckingListItem();
     handleDeletingListItem();
+    
 }
 
 $(main);
