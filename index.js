@@ -4,8 +4,8 @@ const STORE = {
     hideChecked: false,
     search: { enabled: false, term: '' },
     items: [
-        { id: '1932942', name: 'Apple', checked: false },
-        { id: '6838193', name: 'Banana', checked: true }
+        { id: '1932942', name: 'Apple', checked: false, editing: false },
+        { id: '6838193', name: 'Banana', checked: true, editing: false }
     ]
 };
 
@@ -13,8 +13,14 @@ const STORE = {
 function generateListItemString(item, index) {
     return `
         <li data-item-index="${index}" data-item-id="${item.id}">
-            <button class="edit-name-button">E</button>
-            <span class="shopping-item ${item.checked ? 'shopping-item__checked' : '' }">${item.name}</span>
+            <div class="js-list-item-name-display">
+                <input type="image" src="https://cdn3.iconfinder.com/data/icons/block/32/box_edit-512.png" class="edit-name-button js-edit-name-button"></button>
+                <span class="shopping-item ${item.checked ? 'shopping-item__checked' : '' }">${item.name}</span>
+            </div>
+            <form class="js-list-item-edit-name-display ${item.editing ? '' : 'hidden'}">
+                <input type="text" name="list-item-edit-entry" class="js-list-item-edit-name-entry" placeholder="${item.name}">
+                <button type="submit">Submit</button>
+            </form>
             <div class="shopping-item-controls">
                 <button class="shopping-item-toggle">
                     <span class="button-label">check</span>
@@ -52,6 +58,9 @@ function handleSearchItemFilter() {
             alert('Make sure to enter the name of the item to search for!');
         }
     });
+}
+
+function handleCancelSearchButton() {
     $('.js-cancel-search').click(() => {
         disableSearchItemFilter();
         toggleCancelSearchButton();
@@ -138,7 +147,7 @@ function confirmUniqueId(uid) {
 
 function addItemToShoppingList(itemName) {
     const uid = generateUniqueId();
-    STORE.items.push({id: uid, name: itemName, checked: false});
+    STORE.items.push({id: uid, name: itemName, checked: false, editing: false });
 }
 
 //Function to grab the item index:
@@ -180,9 +189,33 @@ function deleteListItem(itemId) {
 
 //Functions to handle editing the name of a list item:
 function handleEditListItemName() {
-    //when you press the button toggle the visiblity of the name and toggle the visibility of the input form (includes text input and button to submit).
-    //take the val of the input field on submit and edit the name of the appropriate item in the STORE
-    //rerender the list
+    $('.shopping-list').on('click', '.js-edit-name-button', function() {
+        const itemId = grabItemId(this);
+        changeEditingState(itemId);
+        renderShoppingList();
+    });
+
+}
+
+function handleEditListItemNameSubmit() {
+    $('.shopping-list').on('submit', '.js-list-item-edit-name-display', function(event) {
+        event.preventDefault();
+        const itemId = grabItemId(this);
+        const newName = $(this).children('.js-list-item-edit-name-entry').val();
+        changeListItemName(itemId, newName);
+        changeEditingState(itemId);
+        renderShoppingList();
+    });
+}
+
+function changeEditingState(itemId) {
+    const itemIndex = grabItemIndex(itemId);
+    STORE.items[itemIndex].editing = !STORE.items[itemIndex].editing;
+}
+
+function changeListItemName(itemId, newName) {
+    const itemIndex = grabItemIndex(itemId);
+    STORE.items[itemIndex].name = newName;
 }
 
 //Main Function:
@@ -193,6 +226,9 @@ function main() {
     handleDeletingListItem();
     handleCheckedItemFilter();
     handleSearchItemFilter();
+    handleCancelSearchButton();
+    handleEditListItemName();
+    handleEditListItemNameSubmit();
 }
 
 $(main);

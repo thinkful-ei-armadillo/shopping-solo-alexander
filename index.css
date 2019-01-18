@@ -13,6 +13,13 @@
   button:hover {
     cursor: pointer;
   }
+
+  .edit-name-button {
+    border: none;
+    background-color: transparent;
+    width: 15px;
+    height: 15px;
+  }
   
   .hidden {
     display: none;
@@ -31,6 +38,10 @@
     list-style: none;
     padding-left: 0;
   }
+
+  .js-list-item-name-display, .js-list-item-edit-name-display {
+    margin-bottom: 15px;
+  }
   
   .shopping-list > li {
     margin-bottom: 20px;
@@ -43,7 +54,6 @@
     color: grey;
     font-style: italic;
     font-size: 20px;
-    margin-bottom: 15px;
   }
   
   .shopping-item__checked {
