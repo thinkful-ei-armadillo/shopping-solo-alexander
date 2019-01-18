@@ -16,6 +16,15 @@
             <input type="text" name="shopping-list-entry" class="js-shopping-list-entry" placeholder="e.g., broccoli">
             <button type="submit">Add item</button>
         </form>
+        <div class="filter-list-controls">
+            <form id="js-search-list-controls">
+                <input type="text" name="search-list-items-entry" class="js-search-list-entry" placeholder="e.g., broccoli">
+                <button type="submit">Search</button>
+                <button class="js-cancel-search hidden" type="button">Cancel Search</button>
+            </form>
+            <label for="checked-item-filter">Hide completed items:</label>
+            <input type="checkbox" name="checked-item-filter" class="js-checked-item-filter">
+        </div>
         <ul class="shopping-list js-shopping-list">
         </ul>
     </div>

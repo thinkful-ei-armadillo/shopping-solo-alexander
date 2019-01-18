@@ -39,7 +39,7 @@
   }
   
   .shopping-item {
-    display: block;
+    display: inline-block;
     color: grey;
     font-style: italic;
     font-size: 20px;
@@ -48,4 +48,18 @@
   
   .shopping-item__checked {
     text-decoration: line-through;
+  }
+
+  .edit-name-button {
+    display: inline-block;
+  }
+
+  .filter-list-controls {
+    border: 1px solid grey;
+    margin-top: 15px;
+    padding: 15px;
+  }
+
+  #js-search-list-controls {
+    margin-bottom: 10px;
   }
